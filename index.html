@@ -162,6 +162,19 @@
   .lp-onel .lbl{font-size:12px;font-weight:900;letter-spacing:.16em;color:var(--cyan);}
   .lp-onel p{margin-top:6px;font-size:15.5px;line-height:1.7;}
   .lp-onel b{color:var(--cyan);}
+
+  /* ============ レスポンシブ（スマホ対応）============ */
+  /* スライドは1280x720固定のまま、JSが画面幅に応じて等比縮小（レイアウト不変）*/
+  .slide{ --fit: 1; }
+  @media (max-width:1340px){
+    html, body{ max-width:100%; overflow-x:hidden; }
+    .deck{ padding:16px 0; gap:0; width:100%; align-items:center; }
+    .slide{
+      transform: scale(var(--fit));
+      transform-origin: top center;
+      margin-bottom: calc((720px * var(--fit)) - 720px + 16px);
+    }
+  }
 </style>
 </head>
 <body>
@@ -385,5 +398,23 @@
   </section>
 
 </div>
+<script>
+(function(){
+  function fit(){
+    var W = document.documentElement.clientWidth;
+    var pad = W <= 1340 ? 16 : 0;          // 左右余白
+    var avail = W - pad*2;
+    var scale = avail < 1280 ? avail/1280 : 1;
+    document.querySelectorAll('.slide').forEach(function(s){
+      s.style.setProperty('--fit', scale);
+    });
+  }
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  window.addEventListener('load', fit);
+  fit();
+})();
+</script>
+
 </body>
 </html>
